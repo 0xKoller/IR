@@ -39,8 +39,10 @@ export function PersonalInfoForm({
   onBack,
   isTransitioning = false,
   inputRef,
+  onError,
 }: PersonalInfoFormProps & {
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  onError?: (msg: string) => void;
 }) {
   const [errors, setErrors] = useState<{
     fullName?: string;
@@ -89,6 +91,7 @@ export function PersonalInfoForm({
       setErrors({
         country: "An unexpected error occurred. Please try again.",
       });
+      if (onError) onError("An unexpected error occurred. Please try again.");
     }
   };
 

@@ -24,8 +24,10 @@ export function IdentityVerificationForm({
   onBack,
   isTransitioning = false,
   inputRef,
+  onError,
 }: IdentityVerificationFormProps & {
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  onError?: (msg: string) => void;
 }) {
   const [errors, setErrors] = useState<{
     idType?: string;
@@ -69,6 +71,7 @@ export function IdentityVerificationForm({
       setErrors({
         idNumber: "An unexpected error occurred. Please try again.",
       });
+      if (onError) onError("An unexpected error occurred. Please try again.");
     }
   };
 

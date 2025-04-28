@@ -16,8 +16,10 @@ export function UserRegistrationForm({
   onNext,
   isTransitioning = false,
   inputRef,
+  onError,
 }: UserRegistrationFormProps & {
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  onError?: (msg: string) => void;
 }) {
   const [errors, setErrors] = useState<{ username?: string; email?: string }>(
     {}
@@ -60,6 +62,7 @@ export function UserRegistrationForm({
       onNext();
     } catch (error) {
       setErrors({ email: "An unexpected error occurred. Please try again." });
+      if (onError) onError("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -91,6 +94,7 @@ export function UserRegistrationForm({
       variants={formVariants}
       initial='hidden'
       animate='visible'
+      noValidate
     >
       <motion.div className='space-y-2' variants={itemVariants}>
         <Label htmlFor='username' className='text-sm font-medium text-gray-700'>
