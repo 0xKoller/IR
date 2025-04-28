@@ -1,5 +1,18 @@
 # Wallet Signup Flow
 
+## Table of Contents
+
+- [Wallet Signup Flow](#wallet-signup-flow)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Evaluation Criteria](#evaluation-criteria)
+  - [Tips \& Tricks](#tips--tricks)
+  - [Implementation Details \& Progress](#implementation-details--progress)
+    - [Tech Stack \& Libraries](#tech-stack--libraries)
+    - [Optimization](#optimization)
+    - [UX/UI Decisions](#uxui-decisions)
+    - [Developer Experience](#developer-experience)
+
 We are going to build a digital wallet web-based signup flow. You are tasked with designing, implementing and deliverying a usable demo of a signup flow.
 We want to see your ability to envision and ship a digital product.
 
@@ -39,3 +52,30 @@ The experience must be the best you can produce - errors in states, flows, or de
 - Use of AI is encouraged, but pay attention to quality.
 - No third-party integrations are necessary - you can mock responses from your own server or client.
 - Consult the [Takehome Guide](https://docs.silver.dev/interview-ready/technical-fundamentals/code-quality/guia-de-takehomes) for more tips
+
+## Implementation Details & Progress
+
+### Tech Stack & Libraries
+
+- **TanStack (React Query)**: Used for efficient server state management, caching, and data synchronization.
+- **shadcn/ui**: Leveraged for rapid, high-quality UI component development.
+
+### Optimization
+
+- Implemented best practices for React performance, including memoization and efficient state updates.
+- Used TanStack's built-in caching and background refetching to minimize unnecessary network requests and improve perceived speed.
+
+### UX/UI Decisions
+
+- **Loading Spinners**: Added clear loading indicators to communicate progress and prevent user confusion during async operations (e.g., form submission, KYC checks).
+- **Error Handling**: All error states are surfaced with user-friendly messages, including specific cases (e.g., email already taken, unsupported country).
+- **Form Feedback**: Real-time validation and feedback for smoother user experience.
+
+### Developer Experience
+
+- Modular, maintainable codebase with clear separation of concerns.
+- Mocked backend responses for rapid prototyping and testing.
+
+---
+
+_This section will be updated as new features and improvements are added._
