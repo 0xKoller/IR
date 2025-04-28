@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UserData } from "@/types/signup.types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { STEP_LABELS } from "@/lib/constants";
 
 export function SignupFlow() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -97,7 +98,7 @@ export function SignupFlow() {
   // this lets us scale the flow by adding or removing steps
   const steps = [
     {
-      label: "Create your account",
+      label: STEP_LABELS[0],
       render: () => (
         <UserRegistrationForm
           userData={userData}
@@ -110,7 +111,7 @@ export function SignupFlow() {
       ),
     },
     {
-      label: "Personal information",
+      label: STEP_LABELS[1],
       render: () => (
         <PersonalInfoForm
           userData={userData}
@@ -124,7 +125,7 @@ export function SignupFlow() {
       ),
     },
     {
-      label: "Identity verification",
+      label: STEP_LABELS[2],
       render: () => (
         <IdentityVerificationForm
           userData={userData}
@@ -138,10 +139,13 @@ export function SignupFlow() {
       ),
     },
     {
-      label: "Success",
+      label: STEP_LABELS[3],
       render: () => <SuccessScreen userData={userData} />,
     },
   ];
+
+  // Extracted function for rendering the current step
+  const renderCurrentStep = () => steps[currentStep - 1].render();
 
   return (
     <div className='min-h-screen bg-gray-50 flex items-center justify-center p-4'>
@@ -186,7 +190,7 @@ export function SignupFlow() {
               animate='animate'
               exit='exit'
             >
-              {steps[currentStep - 1].render()}
+              {renderCurrentStep()}
             </motion.div>
           </AnimatePresence>
         </div>
