@@ -7,33 +7,15 @@ import { IdentityVerificationForm } from "@/components/identity-verification-for
 import { SuccessScreen } from "@/components/success-screen";
 import { StepIndicator } from "@/components/step-indicator";
 import { motion, AnimatePresence } from "framer-motion";
-import { UserData } from "@/types/signup.types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { STEP_LABELS } from "@/lib/constants";
+import { useSignupState } from "@/lib/signup-state";
 
 export function SignupFlow() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [userData, setUserData] = useState<UserData>({
-    username: "",
-    email: "",
-    fullName: "",
-    dateOfBirth: "",
-    address: {
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "",
-    },
-    governmentId: {
-      type: "passport",
-      number: "",
-      expiryDate: "",
-    },
-  });
-  const [globalError, setGlobalError] = useState<string | null>(null);
+  const { state, setSignupState } = useSignupState();
+  const { currentStep, userData, globalError } = state;
+  const isTransitioning = false;
 
   // Refs for focus management
   const stepInputRefs: React.RefObject<HTMLInputElement | null>[] = [
@@ -49,26 +31,18 @@ export function SignupFlow() {
     }
   }, [currentStep, isTransitioning]);
 
-  const updateUserData = (data: Partial<UserData>) => {
-    setUserData((prev) => ({ ...prev, ...data }));
+  const updateUserData = (data: Partial<typeof userData>) => {
+    setSignupState({ userData: { ...userData, ...data } });
   };
 
   const goToNextStep = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentStep((prev) => prev + 1);
-      window.scrollTo(0, 0);
-      setIsTransitioning(false);
-    }, 900);
+    setSignupState({ currentStep: currentStep + 1 });
+    window.scrollTo(0, 0);
   };
 
   const goToPreviousStep = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentStep((prev) => Math.max(1, prev - 1));
-      window.scrollTo(0, 0);
-      setIsTransitioning(false);
-    }, 900);
+    setSignupState({ currentStep: Math.max(1, currentStep - 1) });
+    window.scrollTo(0, 0);
   };
 
   const pageVariants = {
@@ -106,7 +80,7 @@ export function SignupFlow() {
           onNext={goToNextStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[0]}
-          onError={setGlobalError}
+          onError={(err) => setSignupState({ globalError: err })}
         />
       ),
     },
@@ -120,7 +94,7 @@ export function SignupFlow() {
           onBack={goToPreviousStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[1]}
-          onError={setGlobalError}
+          onError={(err) => setSignupState({ globalError: err })}
         />
       ),
     },
@@ -134,7 +108,7 @@ export function SignupFlow() {
           onBack={goToPreviousStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[2]}
-          onError={setGlobalError}
+          onError={(err) => setSignupState({ globalError: err })}
         />
       ),
     },
@@ -144,7 +118,6 @@ export function SignupFlow() {
     },
   ];
 
-  // Extracted function for rendering the current step
   const renderCurrentStep = () => steps[currentStep - 1].render();
 
   return (
