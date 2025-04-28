@@ -23,13 +23,15 @@ export function IdentityVerificationForm({
   onNext,
   onBack,
   isTransitioning = false,
-}: IdentityVerificationFormProps) {
+  inputRef,
+}: IdentityVerificationFormProps & {
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+}) {
   const [errors, setErrors] = useState<{
     idType?: string;
     idNumber?: string;
     idFile?: string;
   }>({});
-  const [isLoading, setIsLoading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,9 +61,6 @@ export function IdentityVerificationForm({
       return;
     }
 
-    // Simulate API call
-    setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
@@ -70,8 +69,6 @@ export function IdentityVerificationForm({
       setErrors({
         idNumber: "An unexpected error occurred. Please try again.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -133,7 +130,7 @@ export function IdentityVerificationForm({
         <Select
           value={userData.governmentId.type}
           onValueChange={(value) => updateGovernmentId("type", value)}
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
           <SelectTrigger
             className={`bg-gray-50 border-gray-200 text-gray-800 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
@@ -187,7 +184,8 @@ export function IdentityVerificationForm({
             errors.idNumber ? "border-red-400 focus:ring-red-400" : ""
           }`}
           placeholder='Enter ID number'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
+          ref={inputRef}
         />
         {errors.idNumber && (
           <motion.p
@@ -220,7 +218,7 @@ export function IdentityVerificationForm({
             accept='image/*,.pdf'
             onChange={handleFileChange}
             className='hidden'
-            disabled={isLoading || isTransitioning}
+            disabled={isTransitioning}
           />
           <motion.div
             initial={{ scale: 1 }}
@@ -269,23 +267,16 @@ export function IdentityVerificationForm({
           type='button'
           onClick={onBack}
           className='flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 h-12 font-normal rounded-xl transition-all duration-200'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
           Back
         </Button>
         <Button
           type='submit'
           className='flex-1 bg-gray-800 hover:bg-gray-700 text-white h-12 font-normal rounded-xl transition-all duration-200 hover:shadow-lg'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
-          {isLoading ? (
-            <div className='flex items-center justify-center'>
-              <div className='h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin mr-2'></div>
-              <span>Processing...</span>
-            </div>
-          ) : (
-            "Complete"
-          )}
+          Complete
         </Button>
       </motion.div>
     </motion.form>

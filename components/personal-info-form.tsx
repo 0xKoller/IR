@@ -38,13 +38,15 @@ export function PersonalInfoForm({
   onNext,
   onBack,
   isTransitioning = false,
-}: PersonalInfoFormProps) {
+  inputRef,
+}: PersonalInfoFormProps & {
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+}) {
   const [errors, setErrors] = useState<{
     fullName?: string;
     dateOfBirth?: string;
     country?: string;
   }>({});
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,14 +76,11 @@ export function PersonalInfoForm({
       return;
     }
 
-    setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       if (userData.address.country === "Uruguay") {
         setErrors({ country: "This country is not supported" });
-        setIsLoading(false);
         return;
       }
 
@@ -90,8 +89,6 @@ export function PersonalInfoForm({
       setErrors({
         country: "An unexpected error occurred. Please try again.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -145,7 +142,8 @@ export function PersonalInfoForm({
             errors.fullName ? "border-red-400 focus:ring-red-400" : ""
           }`}
           placeholder='Enter your full name'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
+          ref={inputRef}
         />
         {errors.fullName && (
           <motion.p
@@ -174,7 +172,7 @@ export function PersonalInfoForm({
           className={`bg-gray-50 border-gray-200 text-gray-800 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
             errors.dateOfBirth ? "border-red-400 focus:ring-red-400" : ""
           }`}
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         />
         {errors.dateOfBirth && (
           <motion.p
@@ -195,7 +193,7 @@ export function PersonalInfoForm({
         <Select
           value={userData.address.country}
           onValueChange={(value) => updateAddress("country", value)}
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
           <SelectTrigger
             className={`bg-gray-50 border-gray-200 text-gray-800 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
@@ -251,23 +249,16 @@ export function PersonalInfoForm({
           type='button'
           onClick={onBack}
           className='flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 h-12 font-normal rounded-xl transition-all duration-200'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
           Back
         </Button>
         <Button
           type='submit'
           className='flex-1 bg-gray-800 hover:bg-gray-700 text-white h-12 font-normal rounded-xl transition-all duration-200 hover:shadow-lg'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
-          {isLoading ? (
-            <div className='flex items-center justify-center'>
-              <div className='h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin mr-2'></div>
-              <span>Processing...</span>
-            </div>
-          ) : (
-            "Continue"
-          )}
+          Continue
         </Button>
       </motion.div>
     </motion.form>

@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CryptoQuest Wallet - Join the Adventure",
-  description: "Begin your financial adventure with CryptoQuest Wallet",
+  title: "Signup Flow for Demo",
+  description: "Signup Flow for Demo, product engineering practice",
 };
 const geistSans = Geist({
   variable: "--font-geist-sans",

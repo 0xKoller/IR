@@ -15,11 +15,13 @@ export function UserRegistrationForm({
   updateUserData,
   onNext,
   isTransitioning = false,
-}: UserRegistrationFormProps) {
+  inputRef,
+}: UserRegistrationFormProps & {
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+}) {
   const [errors, setErrors] = useState<{ username?: string; email?: string }>(
     {}
   );
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,22 +49,17 @@ export function UserRegistrationForm({
       return;
     }
 
-    setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       if (userData.email.toLowerCase() === "alreadytaken@gmail.com") {
         setErrors({ email: "Email is already taken" });
-        setIsLoading(false);
         return;
       }
 
       onNext();
     } catch (error) {
       setErrors({ email: "An unexpected error occurred. Please try again." });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -107,7 +104,8 @@ export function UserRegistrationForm({
             errors.username ? "border-red-400 focus:ring-red-400" : ""
           }`}
           placeholder='Enter username'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
+          ref={inputRef}
         />
         {errors.username && (
           <motion.p
@@ -134,7 +132,7 @@ export function UserRegistrationForm({
             errors.email ? "border-red-400 focus:ring-red-400" : ""
           }`}
           placeholder='Enter email address'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         />
         {errors.email && (
           <motion.p
@@ -170,16 +168,9 @@ export function UserRegistrationForm({
         <Button
           type='submit'
           className='w-full bg-gray-800 hover:bg-gray-700 text-white h-12 font-normal rounded-xl transition-all duration-200 hover:shadow-lg'
-          disabled={isLoading || isTransitioning}
+          disabled={isTransitioning}
         >
-          {isLoading ? (
-            <div className='flex items-center justify-center'>
-              <div className='h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin mr-2'></div>
-              <span>Processing...</span>
-            </div>
-          ) : (
-            "Continue"
-          )}
+          Continue
         </Button>
       </motion.div>
     </motion.form>

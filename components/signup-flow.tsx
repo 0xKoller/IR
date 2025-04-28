@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UserRegistrationForm } from "@/components/user-registration-form";
 import { PersonalInfoForm } from "@/components/personal-info-form";
 import { IdentityVerificationForm } from "@/components/identity-verification-form";
@@ -31,6 +31,20 @@ export function SignupFlow() {
     },
   });
 
+  // Refs for focus management
+  const stepInputRefs: React.RefObject<HTMLInputElement | null>[] = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
+
+  // Focus management: focus first input after step change
+  useEffect(() => {
+    if (!isTransitioning && currentStep <= 3) {
+      stepInputRefs[currentStep - 1]?.current?.focus();
+    }
+  }, [currentStep, isTransitioning]);
+
   const updateUserData = (data: Partial<UserData>) => {
     setUserData((prev) => ({ ...prev, ...data }));
   };
@@ -41,7 +55,7 @@ export function SignupFlow() {
       setCurrentStep((prev) => prev + 1);
       window.scrollTo(0, 0);
       setIsTransitioning(false);
-    }, 300);
+    }, 900);
   };
 
   const goToPreviousStep = () => {
@@ -50,7 +64,7 @@ export function SignupFlow() {
       setCurrentStep((prev) => Math.max(1, prev - 1));
       window.scrollTo(0, 0);
       setIsTransitioning(false);
-    }, 300);
+    }, 900);
   };
 
   const pageVariants = {
@@ -78,14 +92,20 @@ export function SignupFlow() {
 
   return (
     <div className='min-h-screen bg-gray-50 flex items-center justify-center p-4'>
-      <div className='w-full max-w-6xl flex flex-col justify-center md:flex-row gap-8 md:gap-16'>
-        <div className='md:w-1/2 bg-white rounded-2xl p-6 md:p-8 shadow-lg'>
+      <div className='w-full max-w-6xl flex flex-col justify-center md:flex-row gap-8 md:gap-16 relative'>
+        <div className='md:w-1/2 bg-white rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden'>
+          {isTransitioning && (
+            <div className='absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-2xl'>
+              <div className='h-10 w-10 border-4 border-t-transparent border-gray-800 rounded-full animate-spin bg-white bg-opacity-80 shadow-lg'></div>
+            </div>
+          )}
           {currentStep < 4 && (
             <motion.p
               className='text-center md:text-left text-gray-500 text-sm mb-8'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
+              aria-live='polite'
             >
               {currentStep === 1 && "Create your account"}
               {currentStep === 2 && "Personal information"}
@@ -109,6 +129,7 @@ export function SignupFlow() {
                   updateUserData={updateUserData}
                   onNext={goToNextStep}
                   isTransitioning={isTransitioning}
+                  inputRef={stepInputRefs[0]}
                 />
               </motion.div>
             )}
@@ -127,6 +148,7 @@ export function SignupFlow() {
                   onNext={goToNextStep}
                   onBack={goToPreviousStep}
                   isTransitioning={isTransitioning}
+                  inputRef={stepInputRefs[1]}
                 />
               </motion.div>
             )}
@@ -145,6 +167,7 @@ export function SignupFlow() {
                   onNext={goToNextStep}
                   onBack={goToPreviousStep}
                   isTransitioning={isTransitioning}
+                  inputRef={stepInputRefs[2]}
                 />
               </motion.div>
             )}
