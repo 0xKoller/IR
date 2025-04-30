@@ -173,8 +173,8 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
         >
           <span className='text-xs text-gray-500'>Status</span>
           <span className='text-sm text-gray-800 font-medium flex items-center'>
-            <span className='h-2 w-2 bg-yellow-500 rounded-full mr-2'></span>
-            Pending Verification
+            <span className='h-2 w-2 bg-green-500 rounded-full mr-2'></span>
+            Verified
           </span>
         </motion.div>
       </motion.div>

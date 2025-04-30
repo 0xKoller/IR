@@ -28,21 +28,7 @@ import {
   handleDateChange,
   updateAddress,
 } from "@/lib/personal-info-utils";
-
-const countries = [
-  "United States",
-  "Canada",
-  "United Kingdom",
-  "Australia",
-  "Germany",
-  "France",
-  "Japan",
-  "Uruguay",
-  "Brazil",
-  "Mexico",
-  "India",
-  "China",
-];
+import { COUNTRIES } from "@/lib/constants";
 
 export function PersonalInfoForm({
   userData,
@@ -223,13 +209,13 @@ export function PersonalInfoForm({
             <SelectValue placeholder='Select country' />
           </SelectTrigger>
           <SelectContent className='bg-white border-gray-200'>
-            {countries.map((country) => (
+            {COUNTRIES.map((country) => (
               <SelectItem
-                key={country}
-                value={country}
+                key={country.value}
+                value={country.value}
                 className='text-gray-800 focus:bg-gray-100 focus:text-gray-900'
               >
-                {country}
+                {country.label}
               </SelectItem>
             ))}
           </SelectContent>

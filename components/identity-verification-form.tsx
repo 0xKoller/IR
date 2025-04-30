@@ -22,6 +22,7 @@ import {
   handleFileChange,
   ValidationErrors,
 } from "@/lib/identity-verification-utils";
+import { ID_TYPES } from "@/lib/constants";
 
 export function IdentityVerificationForm({
   userData,
@@ -111,24 +112,15 @@ export function IdentityVerificationForm({
             <SelectValue placeholder='Select ID type' />
           </SelectTrigger>
           <SelectContent className='bg-white border-gray-200'>
-            <SelectItem
-              value='passport'
-              className='text-gray-800 focus:bg-gray-100 focus:text-gray-900'
-            >
-              Passport
-            </SelectItem>
-            <SelectItem
-              value='driverLicense'
-              className='text-gray-800 focus:bg-gray-100 focus:text-gray-900'
-            >
-              Driver's License
-            </SelectItem>
-            <SelectItem
-              value='nationalId'
-              className='text-gray-800 focus:bg-gray-100 focus:text-gray-900'
-            >
-              National ID Card
-            </SelectItem>
+            {ID_TYPES.map((idType) => (
+              <SelectItem
+                key={idType.value}
+                value={idType.value}
+                className='text-gray-800 focus:bg-gray-100 focus:text-gray-900'
+              >
+                {idType.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors.idType && (
