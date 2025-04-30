@@ -16,6 +16,12 @@ import {
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { IdentityVerificationFormProps } from "@/interfaces/Iid";
+import {
+  validateIdentityForm,
+  updateGovernmentId,
+  handleFileChange,
+  ValidationErrors,
+} from "@/lib/identity-verification-utils";
 
 export function IdentityVerificationForm({
   userData,
@@ -29,71 +35,31 @@ export function IdentityVerificationForm({
   inputRef?: React.RefObject<HTMLInputElement | null>;
   onError?: (msg: string) => void;
 }) {
-  const [errors, setErrors] = useState<{
-    idType?: string;
-    idNumber?: string;
-    idFile?: string;
-  }>({});
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const [fileName, setFileName] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setErrors({});
-    let hasErrors = false;
-    const newErrors: any = {};
-
-    if (!userData.governmentId.type) {
-      newErrors.idType = "ID type is required";
-      hasErrors = true;
-    }
-
-    if (!userData.governmentId.number.trim()) {
-      newErrors.idNumber = "ID number is required";
-      hasErrors = true;
-    }
-
-    if (!userData.governmentId.file && !fileName) {
-      newErrors.idFile = "ID document is required";
-      hasErrors = true;
-    }
+    const { errors: validationErrors, hasErrors } = validateIdentityForm(
+      userData,
+      fileName
+    );
 
     if (hasErrors) {
-      setErrors(newErrors);
+      setErrors(validationErrors);
       return;
     }
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
-
       onNext();
     } catch (error) {
       setErrors({
         idNumber: "An unexpected error occurred. Please try again.",
       });
       if (onError) onError("An unexpected error occurred. Please try again.");
-    }
-  };
-
-  const updateGovernmentId = (field: string, value: string) => {
-    updateUserData({
-      governmentId: {
-        ...userData.governmentId,
-        [field]: value,
-      },
-    });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFileName(file.name);
-      updateUserData({
-        governmentId: {
-          ...userData.governmentId,
-          file,
-        },
-      });
     }
   };
 
@@ -132,7 +98,9 @@ export function IdentityVerificationForm({
         </Label>
         <Select
           value={userData.governmentId.type}
-          onValueChange={(value) => updateGovernmentId("type", value)}
+          onValueChange={(value) =>
+            updateGovernmentId(userData, updateUserData, "type", value)
+          }
           disabled={isTransitioning}
         >
           <SelectTrigger
@@ -182,7 +150,14 @@ export function IdentityVerificationForm({
         <Input
           id='idNumber'
           value={userData.governmentId.number}
-          onChange={(e) => updateGovernmentId("number", e.target.value)}
+          onChange={(e) =>
+            updateGovernmentId(
+              userData,
+              updateUserData,
+              "number",
+              e.target.value
+            )
+          }
           className={`bg-gray-50 border-gray-200 text-gray-800 placeholder:text-gray-400 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
             errors.idNumber ? "border-red-400 focus:ring-red-400" : ""
           }`}
@@ -219,7 +194,9 @@ export function IdentityVerificationForm({
             id='idFile'
             type='file'
             accept='image/*,.pdf'
-            onChange={handleFileChange}
+            onChange={(e) =>
+              handleFileChange(e, userData, updateUserData, setFileName)
+            }
             className='hidden'
             disabled={isTransitioning}
           />

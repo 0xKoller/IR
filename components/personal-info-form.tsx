@@ -22,6 +22,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  PersonalInfoErrors,
+  validatePersonalInfoForm,
+  handleDateChange,
+  updateAddress,
+} from "@/lib/personal-info-utils";
 
 const countries = [
   "United States",
@@ -50,95 +56,18 @@ export function PersonalInfoForm({
   inputRef?: React.RefObject<HTMLInputElement | null>;
   onError?: (msg: string) => void;
 }) {
-  const [errors, setErrors] = useState<{
-    fullName?: string;
-    dateOfBirth?: string;
-    country?: string;
-  }>({});
-
   const [isUnderage, setIsUnderage] = useState(false);
-
-  const validateDateOfBirth = (dateStr: string) => {
-    const today = new Date();
-    const birthDate = new Date(dateStr);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      return age - 1;
-    }
-    return age;
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateStr = e.target.value;
-    updateUserData({ dateOfBirth: dateStr });
-
-    if (dateStr) {
-      const birthDate = new Date(dateStr);
-      const today = new Date();
-
-      // Check for future date
-      if (birthDate > today) {
-        setErrors((prev) => ({
-          ...prev,
-          dateOfBirth: "Date of birth cannot be in the future",
-        }));
-        setIsUnderage(false);
-        return;
-      }
-
-      const age = validateDateOfBirth(dateStr);
-      if (age < 18) {
-        setErrors((prev) => ({
-          ...prev,
-          dateOfBirth: "You must be at least 18 years old",
-        }));
-        setIsUnderage(true);
-      } else {
-        setErrors((prev) => ({ ...prev, dateOfBirth: undefined }));
-        setIsUnderage(false);
-      }
-    } else {
-      setErrors((prev) => ({ ...prev, dateOfBirth: undefined }));
-      setIsUnderage(false);
-    }
-  };
+  const [errors, setErrors] = useState<PersonalInfoErrors>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setErrors({});
-
-    let hasErrors = false;
-    const newErrors: any = {};
-
-    if (!userData.fullName.trim()) {
-      newErrors.fullName = "Full name is required";
-      hasErrors = true;
-    }
-
-    if (!userData.dateOfBirth) {
-      newErrors.dateOfBirth = "Date of birth is required";
-      hasErrors = true;
-    } else {
-      const age = validateDateOfBirth(userData.dateOfBirth);
-      if (age < 18) {
-        newErrors.dateOfBirth = "You must be at least 18 years old";
-        hasErrors = true;
-      }
-    }
-
-    if (!userData.address.country) {
-      newErrors.country = "Country is required";
-      hasErrors = true;
-    }
+    const { errors: validationErrors, hasErrors } =
+      validatePersonalInfoForm(userData);
 
     if (hasErrors) {
-      setErrors(newErrors);
+      setErrors(validationErrors);
       return;
     }
 
@@ -157,15 +86,6 @@ export function PersonalInfoForm({
       });
       if (onError) onError("An unexpected error occurred. Please try again.");
     }
-  };
-
-  const updateAddress = (field: string, value: string) => {
-    updateUserData({
-      address: {
-        ...userData.address,
-        [field]: value,
-      },
-    });
   };
 
   const formVariants = {
@@ -233,9 +153,10 @@ export function PersonalInfoForm({
         </Label>
         <Input
           id='dateOfBirth'
-          type='date'
+          type='text'
           value={userData.dateOfBirth}
-          onChange={handleDateChange}
+          onChange={(e) => handleDateChange(e, updateUserData)}
+          placeholder='MM/DD/YYYY'
           className={`bg-gray-50 border-gray-200 text-gray-800 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
             errors.dateOfBirth && !isUnderage
               ? "border-red-400 focus:ring-red-400"
@@ -289,7 +210,9 @@ export function PersonalInfoForm({
         </Label>
         <Select
           value={userData.address.country}
-          onValueChange={(value) => updateAddress("country", value)}
+          onValueChange={(value) =>
+            updateAddress(userData, updateUserData, "country", value)
+          }
           disabled={isTransitioning}
         >
           <SelectTrigger

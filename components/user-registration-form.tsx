@@ -9,6 +9,10 @@ import { AlertCircle, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import UserRegistrationFormProps from "@/interfaces/IuserRegistration";
+import {
+  UserRegistrationErrors,
+  validateUserRegistrationForm,
+} from "@/lib/user-registration-utils";
 
 export function UserRegistrationForm({
   userData,
@@ -21,33 +25,17 @@ export function UserRegistrationForm({
   inputRef?: React.RefObject<HTMLInputElement | null>;
   onError?: (msg: string) => void;
 }) {
-  const [errors, setErrors] = useState<{ username?: string; email?: string }>(
-    {}
-  );
+  const [errors, setErrors] = useState<UserRegistrationErrors>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setErrors({});
-
-    let hasErrors = false;
-    const newErrors: { username?: string; email?: string } = {};
-
-    if (!userData.username.trim()) {
-      newErrors.username = "Username is required";
-      hasErrors = true;
-    }
-
-    if (!userData.email.trim()) {
-      newErrors.email = "Email is required";
-      hasErrors = true;
-    } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
-      newErrors.email = "Please enter a valid email";
-      hasErrors = true;
-    }
+    const { errors: validationErrors, hasErrors } =
+      validateUserRegistrationForm(userData);
 
     if (hasErrors) {
-      setErrors(newErrors);
+      setErrors(validationErrors);
       return;
     }
 
