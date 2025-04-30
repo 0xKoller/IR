@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils";
 import { useGlobalStore } from "@/lib/store";
 import { Building } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  animateCardInsertion,
+  animateCardHover,
+  handleCardClick,
+  handleCardDoubleClick,
+} from "@/lib/wallet-utils";
 
 interface CardProps {
   color: string;
@@ -24,7 +30,6 @@ const Card = ({
   cardType = "credit",
 }: CardProps & { cardType?: "credit" | "id" | "contact" }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isFlipped, setIsFlipped] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const userData = useGlobalStore((state) => state.userData);
@@ -60,116 +65,66 @@ const Card = ({
     colorScheme = cardColors.gray;
   }
 
+  // Animation for inserting/removing cards
   useEffect(() => {
-    if (!cardRef.current) return;
-
-    const timeline = gsap.timeline({
-      onStart: () => setIsAnimating(true),
-      onComplete: () => setIsAnimating(false),
+    animateCardInsertion({
+      cardRef,
+      index,
+      isInWallet: isInWallet[index],
+      setIsAnimating,
     });
+  }, [isInWallet, index]);
 
-    if (isInWallet[index]) {
-      timeline.to(cardRef.current, {
-        y: 30 + index * 8,
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.6,
-        ease: "power2.inOut",
-      });
-    } else {
-      timeline.to(cardRef.current, {
-        y: -150 - index * 30,
-        rotateX: 0,
-        rotateY: isFlipped ? 180 : 0,
-        duration: 0.6,
-        ease: "back.out(1.5)",
-      });
-    }
-  }, [isInWallet, index, isFlipped]);
-
-  const handleFlip = () => {
-    if (isAnimating || isInWallet[index]) return;
-
-    gsap.to(cardRef.current, {
-      rotateY: isFlipped ? 0 : 180,
-      duration: 0.6,
-      ease: "power3.inOut",
-      onStart: () => setIsAnimating(true),
-      onComplete: () => {
-        setIsAnimating(false);
-        setIsFlipped(!isFlipped);
-      },
-    });
-  };
-  const handleCardClick = () => {
-    if (isAnimating) return;
-
-    if (isInWallet[index]) {
-      const newIsInWallet = [...isInWallet];
-      newIsInWallet[index] = false;
-      setIsInWallet(newIsInWallet);
-    } else {
-      handleFlip();
-    }
-  };
-
-  const handleDoubleClick = () => {
-    if (isAnimating || isInWallet[index]) return;
-    const newIsInWallet = [...isInWallet];
-    newIsInWallet[index] = true;
-    setIsInWallet(newIsInWallet);
-    setCardStackOrder([...cardStackOrder.filter((i) => i !== index), index]);
-    // Reset flip state when inserting
-    if (isFlipped) {
-      gsap.to(cardRef.current, {
-        rotateY: 0,
-        duration: 0.3,
-        ease: "power2.inOut",
-        onComplete: () => setIsFlipped(false),
-      });
-    }
-  };
-
+  // Hover animation effect
   useEffect(() => {
-    if (!cardRef.current || isInWallet[index] || isAnimating) return;
-
-    if (isHovered) {
-      gsap.to(cardRef.current, {
-        scale: 1.05,
-        y: "-=10",
-        boxShadow: "0 20px 25px rgba(0, 0, 0, 0.3)",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    } else {
-      gsap.to(cardRef.current, {
-        scale: 1,
-        y: -150 - index * 30,
-        boxShadow: "0 10px 15px rgba(0, 0, 0, 0.2)",
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
+    animateCardHover({
+      cardRef,
+      isHovered,
+      isInWallet: isInWallet[index],
+      isAnimating,
+      index,
+    });
   }, [isHovered, isInWallet, isAnimating, index]);
+
+  const onCardClick = () => {
+    handleCardClick(
+      isAnimating,
+      isInWallet[index],
+      index,
+      setIsInWallet,
+      isInWallet
+    );
+  };
+
+  const onCardDoubleClick = () => {
+    handleCardDoubleClick(
+      isAnimating,
+      isInWallet[index],
+      index,
+      setIsInWallet,
+      isInWallet,
+      cardStackOrder,
+      setCardStackOrder
+    );
+  };
 
   return (
     <div
       ref={cardRef}
       className={cn(
-        "absolute  left-0 right-0 mx-auto w-[280px] h-[170px] rounded-xl cursor-pointer shadow-lg",
+        "absolute left-0 right-0 mx-auto w-[280px] h-[170px] rounded-xl cursor-pointer shadow-lg",
         "transform-gpu transition-shadow",
         isInWallet[index] ? "" : "z-10"
       )}
       style={{
         top: "50%",
-        transform: `translateY(-50%) ${isFlipped ? "rotateY(180deg)" : ""}`,
-        transformStyle: "preserve-3d",
+        transform: "translateY(-50%)",
         zIndex: isInWallet[index]
           ? 10 + cardStackOrder.indexOf(index)
           : 10 - cardStackOrder.indexOf(index),
       }}
-      onClick={handleCardClick}
-      onDoubleClick={handleDoubleClick}
+      onClick={onCardClick}
+      onDoubleClick={onCardDoubleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -180,7 +135,6 @@ const Card = ({
           colorScheme.border,
           colorScheme.shadow
         )}
-        style={{ backfaceVisibility: "hidden" }}
       >
         {cardType === "credit" && (
           <div className='flex flex-row justify-evenly w-full h-full text-white items-center'>
@@ -287,31 +241,6 @@ const Card = ({
           </>
         )}
       </div>
-
-      <div
-        className='absolute inset-0 rounded-xl border bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 shadow-gray-700/50'
-        style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-      >
-        <div className='w-full h-12 bg-black my-6'></div>
-        <div className='px-4'>
-          <div className='w-full bg-white h-10 flex items-center justify-end px-4'>
-            <div className='font-mono text-black'>
-              {index === 0 ? "123" : index === 1 ? "456" : "789"}
-            </div>
-          </div>
-          <div className='mt-6 text-xs text-gray-300 text-center'>
-            <p>This card is property of Apple Wallet</p>
-            <p>If found, please return to nearest Apple Store</p>
-          </div>
-        </div>
-      </div>
-
-      {isHovered && !isInWallet[index] && !isAnimating && (
-        <div className='absolute -bottom-12 left-0 right-0 mx-auto text-white text-xs bg-black/70 rounded-md py-1 px-2 text-center whitespace-nowrap'>
-          {isFlipped ? "Click to flip back" : "Click to flip"} • Double-click to
-          insert
-        </div>
-      )}
     </div>
   );
 };

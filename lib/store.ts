@@ -1,4 +1,3 @@
-// If you haven't already, run: npm install zustand
 import { create } from "zustand";
 
 export interface Address {
