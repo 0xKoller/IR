@@ -1,17 +1,12 @@
 import { create } from "zustand";
 
 export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
   country: string;
 }
 
 export interface GovernmentId {
   type: string;
   number: string;
-  expiryDate: string;
   file?: File;
 }
 
@@ -39,29 +34,22 @@ const initialUserData: UserData = {
   fullName: "",
   dateOfBirth: "",
   address: {
-    street: "",
-    city: "",
-    state: "",
-    zipCode: "",
     country: "",
   },
   governmentId: {
     type: "",
     number: "",
-    expiryDate: "",
   },
 };
 
-export const useGlobalStore = create<StoreState>(
-  (
-    set: (fn: (state: StoreState) => Partial<StoreState> | StoreState) => void
-  ) => ({
-    userData: initialUserData,
-    setUserData: (data: Partial<UserData>) =>
-      set((state) => ({ userData: { ...state.userData, ...data } })),
-    isInWallet: [false, false, false],
-    setIsInWallet: (arr: boolean[]) => set({ isInWallet: arr }),
-    cardStackOrder: [0, 1, 2],
-    setCardStackOrder: (order: number[]) => set({ cardStackOrder: order }),
-  })
-);
+export const useGlobalStore = create<StoreState>((set) => ({
+  userData: initialUserData,
+  setUserData: (data: Partial<UserData>) =>
+    set((state) => ({ userData: { ...state.userData, ...data } })),
+  isInWallet: [false, false, false],
+  setIsInWallet: (arr: boolean[]) =>
+    set((state) => ({ ...state, isInWallet: arr })),
+  cardStackOrder: [0, 1, 2],
+  setCardStackOrder: (order: number[]) =>
+    set((state) => ({ ...state, cardStackOrder: order })),
+}));
