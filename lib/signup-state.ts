@@ -29,7 +29,6 @@ const initialState = {
 export function useSignupState() {
   const queryClient = useQueryClient();
 
-  // Query for reading state
   const { data: state = initialState } = useQuery({
     queryKey: SIGNUP_STATE_KEY,
     queryFn: () => initialState,

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Select,
@@ -16,6 +16,12 @@ import {
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import PersonalInfoFormProps from "@/interfaces/IpersonalInformation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const countries = [
   "United States",
@@ -50,6 +56,58 @@ export function PersonalInfoForm({
     country?: string;
   }>({});
 
+  const [isUnderage, setIsUnderage] = useState(false);
+
+  const validateDateOfBirth = (dateStr: string) => {
+    const today = new Date();
+    const birthDate = new Date(dateStr);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      return age - 1;
+    }
+    return age;
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dateStr = e.target.value;
+    updateUserData({ dateOfBirth: dateStr });
+
+    if (dateStr) {
+      const birthDate = new Date(dateStr);
+      const today = new Date();
+
+      // Check for future date
+      if (birthDate > today) {
+        setErrors((prev) => ({
+          ...prev,
+          dateOfBirth: "Date of birth cannot be in the future",
+        }));
+        setIsUnderage(false);
+        return;
+      }
+
+      const age = validateDateOfBirth(dateStr);
+      if (age < 18) {
+        setErrors((prev) => ({
+          ...prev,
+          dateOfBirth: "You must be at least 18 years old",
+        }));
+        setIsUnderage(true);
+      } else {
+        setErrors((prev) => ({ ...prev, dateOfBirth: undefined }));
+        setIsUnderage(false);
+      }
+    } else {
+      setErrors((prev) => ({ ...prev, dateOfBirth: undefined }));
+      setIsUnderage(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -66,6 +124,12 @@ export function PersonalInfoForm({
     if (!userData.dateOfBirth) {
       newErrors.dateOfBirth = "Date of birth is required";
       hasErrors = true;
+    } else {
+      const age = validateDateOfBirth(userData.dateOfBirth);
+      if (age < 18) {
+        newErrors.dateOfBirth = "You must be at least 18 years old";
+        hasErrors = true;
+      }
     }
 
     if (!userData.address.country) {
@@ -163,7 +227,7 @@ export function PersonalInfoForm({
       <motion.div className='space-y-2' variants={itemVariants}>
         <Label
           htmlFor='dateOfBirth'
-          className='text-sm font-medium text-gray-700'
+          className='text-sm font-medium text-gray-700 flex items-center gap-1'
         >
           Date of Birth
         </Label>
@@ -171,13 +235,15 @@ export function PersonalInfoForm({
           id='dateOfBirth'
           type='date'
           value={userData.dateOfBirth}
-          onChange={(e) => updateUserData({ dateOfBirth: e.target.value })}
+          onChange={handleDateChange}
           className={`bg-gray-50 border-gray-200 text-gray-800 h-12 transition-all duration-200 focus:ring-2 focus:ring-gray-800 focus:ring-offset-2 ${
-            errors.dateOfBirth ? "border-red-400 focus:ring-red-400" : ""
+            errors.dateOfBirth && !isUnderage
+              ? "border-red-400 focus:ring-red-400"
+              : ""
           }`}
           disabled={isTransitioning}
         />
-        {errors.dateOfBirth && (
+        {errors.dateOfBirth && !isUnderage && (
           <motion.p
             className='text-red-500 text-xs mt-1'
             initial={{ opacity: 0, y: -5 }}
@@ -187,11 +253,39 @@ export function PersonalInfoForm({
             {errors.dateOfBirth}
           </motion.p>
         )}
+        {isUnderage && (
+          <motion.div
+            className='mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-md'
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <p className='text-yellow-700 text-xs'>
+              You must be at least 18 years old to create a wallet. Please come
+              back when you meet the age requirement.
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       <motion.div className='space-y-2' variants={itemVariants}>
-        <Label htmlFor='country' className='text-sm font-medium text-gray-700'>
+        <Label
+          htmlFor='country'
+          className='text-sm font-medium text-gray-700 flex items-center gap-1'
+        >
           Country
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span tabIndex={0}>
+                  <Info className='w-4 h-4 text-gray-400 cursor-pointer' />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side='right'>
+                Try selecting Uruguay to see the error.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Label>
         <Select
           value={userData.address.country}

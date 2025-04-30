@@ -10,38 +10,58 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { STEP_LABELS } from "@/lib/constants";
-import { useSignupState } from "@/lib/signup-state";
+import { useGlobalStore } from "@/lib/store";
 
 export function SignupFlow() {
-  const { state, setSignupState } = useSignupState();
-  const { currentStep, userData, globalError } = state;
+  const { userData, setUserData } = useGlobalStore();
+  const isInWallet = useGlobalStore((state) => state.isInWallet);
+  const setIsInWallet = useGlobalStore((state) => state.setIsInWallet);
+  const cardStackOrder = useGlobalStore((state) => state.cardStackOrder);
+  const setCardStackOrder = useGlobalStore((state) => state.setCardStackOrder);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [globalError, setGlobalError] = useState<string | null>(null);
   const isTransitioning = false;
 
-  // Refs for focus management
   const stepInputRefs: React.RefObject<HTMLInputElement | null>[] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ];
 
-  // Focus management: focus first input after step change
   useEffect(() => {
     if (!isTransitioning && currentStep <= 3) {
       stepInputRefs[currentStep - 1]?.current?.focus();
     }
   }, [currentStep, isTransitioning]);
 
-  const updateUserData = (data: Partial<typeof userData>) => {
-    setSignupState({ userData: { ...userData, ...data } });
-  };
-
   const goToNextStep = () => {
-    setSignupState({ currentStep: currentStep + 1 });
+    // Dispatch event for card insertion based on current step
+    if (currentStep === 1) {
+      window.dispatchEvent(new CustomEvent("wallet-insert-card-0"));
+    } else if (currentStep === 2) {
+      window.dispatchEvent(new CustomEvent("wallet-insert-card-1"));
+    } else if (currentStep === 3) {
+      window.dispatchEvent(new CustomEvent("wallet-insert-card-2"));
+    }
+
+    setCurrentStep(currentStep + 1);
     window.scrollTo(0, 0);
   };
 
   const goToPreviousStep = () => {
-    setSignupState({ currentStep: Math.max(1, currentStep - 1) });
+    // Eject the card for the current step (if not on first step)
+    if (currentStep > 1 && currentStep <= 3) {
+      const cardIdx = currentStep - 2;
+      const newIsInWallet = [...isInWallet];
+      newIsInWallet[cardIdx] = false;
+      setIsInWallet(newIsInWallet);
+      // Restore stack order
+      const originalOrder = [0, 1, 2];
+      const inWallet = cardStackOrder.filter((i) => newIsInWallet[i]);
+      const notInWallet = originalOrder.filter((i) => !newIsInWallet[i]);
+      setCardStackOrder([...inWallet, ...notInWallet]);
+    }
+    setCurrentStep(Math.max(1, currentStep - 1));
     window.scrollTo(0, 0);
   };
 
@@ -76,11 +96,11 @@ export function SignupFlow() {
       render: () => (
         <UserRegistrationForm
           userData={userData}
-          updateUserData={updateUserData}
+          updateUserData={(data) => setUserData(data)}
           onNext={goToNextStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[0]}
-          onError={(err) => setSignupState({ globalError: err })}
+          onError={(err) => setGlobalError(err)}
         />
       ),
     },
@@ -89,12 +109,12 @@ export function SignupFlow() {
       render: () => (
         <PersonalInfoForm
           userData={userData}
-          updateUserData={updateUserData}
+          updateUserData={(data) => setUserData(data)}
           onNext={goToNextStep}
           onBack={goToPreviousStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[1]}
-          onError={(err) => setSignupState({ globalError: err })}
+          onError={(err) => setGlobalError(err)}
         />
       ),
     },
@@ -103,12 +123,12 @@ export function SignupFlow() {
       render: () => (
         <IdentityVerificationForm
           userData={userData}
-          updateUserData={updateUserData}
+          updateUserData={(data) => setUserData(data)}
           onNext={goToNextStep}
           onBack={goToPreviousStep}
           isTransitioning={isTransitioning}
           inputRef={stepInputRefs[2]}
-          onError={(err) => setSignupState({ globalError: err })}
+          onError={(err) => setGlobalError(err)}
         />
       ),
     },

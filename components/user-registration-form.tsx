@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import UserRegistrationFormProps from "@/interfaces/IuserRegistration";
@@ -124,8 +124,17 @@ export function UserRegistrationForm({
       </motion.div>
 
       <motion.div className='space-y-2' variants={itemVariants}>
-        <Label htmlFor='email' className='text-sm font-medium text-gray-700'>
+        <Label
+          htmlFor='email'
+          className='text-sm font-medium text-gray-700 flex items-center gap-1'
+        >
           Email
+          <span className='relative group inline-block'>
+            <Info className='w-4 h-4 text-gray-400 cursor-pointer' />
+            <span className='absolute left-6 top-1/2 -translate-y-1/2 z-10 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap shadow-lg'>
+              Try using alreadytaken@gmail.com to see the error.
+            </span>
+          </span>
         </Label>
         <Input
           id='email'

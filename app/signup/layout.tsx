@@ -1,5 +1,5 @@
 import { Provider } from "@/components/provider";
-
+import Wallet from "@/components/wallet";
 export default function SignupLayout({
   children,
 }: {
@@ -9,7 +9,9 @@ export default function SignupLayout({
     <Provider>
       <main className='grid grid-cols-3'>
         <div className='col-span-2'>{children}</div>
-        <div className='col-span-1'>Placeholder for wallet</div>
+        <div className='col-span-1'>
+          <Wallet />
+        </div>
       </main>
     </Provider>
   );
