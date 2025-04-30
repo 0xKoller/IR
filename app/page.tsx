@@ -2,13 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CreditCard, Shield, Zap, Star, ChevronRight } from "lucide-react";
+import { CreditCard, Shield, Zap, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
   return (
     <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
-      {/* Hero Section */}
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
         <div className='text-center'>
           <motion.div

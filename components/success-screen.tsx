@@ -210,7 +210,7 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.5 }}
         >
-          A confirmation email has been sent to {userData.email}
+          An email has been sent to {userData.email}
         </motion.p>
       </motion.div>
     </motion.div>
