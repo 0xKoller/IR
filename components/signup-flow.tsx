@@ -142,16 +142,18 @@ export function SignupFlow() {
 
   return (
     <div className='min-h-screen bg-gray-50 flex items-center justify-center p-4'>
-      <div className='w-full max-w-6xl flex flex-col justify-center md:flex-row gap-8 md:gap-16 relative'>
-        <div className='md:w-1/2 bg-white rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden'>
+      <div className='w-full max-w-4xl flex flex-col justify-center md:flex-row gap-8 md:gap-16 relative'>
+        <div className='md:w-full bg-white border-4 border-black rounded-2xl p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all duration-300 hover:translate-x-[4px] hover:translate-y-[4px] relative overflow-hidden flex flex-col gap-6'>
           {isTransitioning && (
             <div className='absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-2xl'>
               <div className='h-10 w-10 border-4 border-t-transparent border-gray-800 rounded-full animate-spin bg-white bg-opacity-80 shadow-lg'></div>
             </div>
           )}
+
+          {/* Step Label */}
           {currentStep < steps.length && (
             <motion.p
-              className='text-center md:text-left text-gray-500 text-sm mb-8'
+              className='text-center md:text-left text-black text-2xl font-extrabold mb-2 tracking-tight'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.5 }}
@@ -161,20 +163,34 @@ export function SignupFlow() {
             </motion.p>
           )}
 
+          {/* Subtitle/Helper text (optional) */}
+          {currentStep < steps.length && (
+            <p className='text-center md:text-left text-gray-500 text-base mb-4'>
+              Complete the step to continue your registration.
+            </p>
+          )}
+
+          {/* Error Alert */}
           {globalError && (
             <div className='mb-4'>
               <Alert
                 variant='destructive'
-                className='bg-red-50 text-red-500 border-red-200'
+                className='bg-red-100 text-red-700 border-4 border-red-400 flex items-center gap-2'
               >
-                <AlertCircle className='h-4 w-4' />
-                <AlertDescription>{globalError}</AlertDescription>
+                <AlertCircle className='h-5 w-5' />
+                <AlertDescription className='font-semibold'>
+                  {globalError}
+                </AlertDescription>
               </Alert>
             </div>
           )}
 
-          <StepIndicator currentStep={currentStep} totalSteps={3} />
+          {/* Step Indicator */}
+          <div className='mb-6 flex justify-center scale-110'>
+            <StepIndicator currentStep={currentStep} totalSteps={3} />
+          </div>
 
+          {/* Step Content */}
           <AnimatePresence mode='wait'>
             <motion.div
               key={`step${currentStep}`}
@@ -182,6 +198,7 @@ export function SignupFlow() {
               initial='initial'
               animate='animate'
               exit='exit'
+              className='min-h-[300px] flex flex-col justify-between'
             >
               {renderCurrentStep()}
             </motion.div>

@@ -13,21 +13,21 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
         return (
           <div key={index} className='flex flex-col items-center'>
             <motion.div
-              className={`relative flex items-center justify-center rounded-full 
+              className={`relative flex items-center justify-center rounded-full transition-all duration-300 ease-in-out
                 ${
                   isCompleted
-                    ? "bg-gray-800 text-white"
+                    ? "bg-black text-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                     : isActive
-                    ? "border-2 border-gray-800 bg-white text-gray-800"
-                    : "border-2 border-gray-300 bg-white text-gray-400"
+                      ? "bg-white text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                      : "bg-white text-gray-400 border-4 border-gray-300"
                 }
-                transition-all duration-300 ease-in-out`}
+              `}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{
                 scale: isActive ? 1.1 : 1,
                 opacity: 1,
-                height: isActive ? 44 : 40,
-                width: isActive ? 44 : 40,
+                height: isActive ? 48 : 44,
+                width: isActive ? 48 : 44,
               }}
               transition={{
                 delay: index * 0.1,
@@ -37,13 +37,13 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
                 damping: 20,
               }}
             >
-              {index + 1}
+              <span className='text-xl font-extrabold'>{index + 1}</span>
 
               {index < totalSteps - 1 && (
                 <motion.div
-                  className={`absolute left-full w-6 h-0.5 ${
-                    isCompleted ? "bg-gray-800" : "bg-gray-300"
-                  }`}
+                  className={`absolute left-full top-1/2 -translate-y-1/2 h-1 w-10 transition-all duration-300
+                    ${isCompleted ? "bg-black border-4 border-black" : "bg-gray-300 border-4 border-gray-300"}
+                  `}
                   style={{ left: "calc(100% + 4px)" }}
                   initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
@@ -53,7 +53,7 @@ export function StepIndicator({ currentStep, totalSteps }: StepIndicatorProps) {
             </motion.div>
 
             <motion.div
-              className='mt-2 text-xs text-gray-500'
+              className={`mt-2 text-xs font-bold transition-all duration-300 ${isActive ? "text-black" : "text-gray-400"}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: isActive ? 1 : 0.7 }}
               transition={{ delay: index * 0.1 + 0.3 }}
