@@ -63,7 +63,7 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className='relative overflow-hidden py-20 md:py-32'>
           <div className=' px-4 md:px-6'>
-            <div className='grid gap-12 md:grid-cols-2 md:gap-16 items-center'>
+            <div className='grid gap-8 md:grid-cols-2 md:gap-12 items-center'>
               <div>
                 <h1 className='text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8'>
                   DIGITAL
@@ -92,7 +92,7 @@ export default function LandingPage() {
                 <div className='absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1),transparent_70%)]'></div>
                 <div className='relative rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden'>
                   <Image
-                    src='/placeholder.svg?key=vs0v2'
+                    src='/wallet.png'
                     width={600}
                     height={600}
                     alt='ZenWallet Dashboard Preview'
@@ -176,11 +176,25 @@ export default function LandingPage() {
                 </ul>
               </div>
               <div className='relative'>
-                <div className='rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
+                <div className='flex flex-wrap gap-2 items-center justify-center rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
                   <Image
-                    src='/placeholder.svg?key=cq96q'
-                    width={600}
-                    height={600}
+                    src='/icon1.png'
+                    width={200}
+                    height={200}
+                    alt='Cashback Illustration'
+                    className='rounded-lg'
+                  />
+                  <Image
+                    src='/icon2.png'
+                    width={200}
+                    height={200}
+                    alt='Cashback Illustration'
+                    className='rounded-lg'
+                  />
+                  <Image
+                    src='/icon3.png'
+                    width={200}
+                    height={200}
                     alt='Cashback Illustration'
                     className='rounded-lg'
                   />
@@ -197,7 +211,7 @@ export default function LandingPage() {
               <div className='order-2 md:order-1 relative'>
                 <div className='rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
                   <Image
-                    src='/placeholder.svg?key=jkk1e'
+                    src='/reimagine.png'
                     width={600}
                     height={600}
                     alt='Loyalty Points Illustration'

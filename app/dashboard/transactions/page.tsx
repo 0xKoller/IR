@@ -194,7 +194,7 @@ export default function TransactionsPage() {
 
   return (
     <div className='flex min-h-screen flex-col bg-white'>
-      <div className='flex flex-1 pt-24'>
+      <div className='flex flex-1 pt-2'>
         <main className='flex-1 overflow-auto p-6 md:p-8'>
           <div className='grid gap-8'>
             <div>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, ArrowUp, CreditCard, Lock, User } from "lucide-react";
+import Image from "next/image";
 
 export default function AccountPage() {
   return (
@@ -33,7 +34,13 @@ export default function AccountPage() {
               <div className='flex items-center gap-6'>
                 <div className='relative'>
                   <div className='h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center'>
-                    <User className='h-12 w-12 text-gray-500' />
+                    <Image
+                      src='/avatar.png'
+                      width={100}
+                      height={100}
+                      alt='Avatar'
+                      className='rounded-full object-cover'
+                    />
                   </div>
                   <Button
                     size='icon'

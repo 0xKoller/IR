@@ -111,7 +111,7 @@ export default function LoyaltyPage() {
 
   return (
     <div className='flex min-h-screen flex-col bg-white'>
-      <div className='flex flex-1 pt-24'>
+      <div className='flex flex-1 pt-2'>
         <main className='flex-1 overflow-auto p-6 md:p-8'>
           <div className='grid gap-8'>
             <div>
@@ -129,7 +129,7 @@ export default function LoyaltyPage() {
               className='w-full'
               onValueChange={setActiveTab}
             >
-              <TabsList className='grid w-full grid-cols-3 border-2 border-black'>
+              <TabsList className='w-full border-2 border-black'>
                 <TabsTrigger value='overview' className='text-lg'>
                   Overview
                 </TabsTrigger>

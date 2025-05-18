@@ -67,7 +67,7 @@ export function DashboardSidebar({
             </nav>
             <div className='mt-auto border-t-2 border-black p-4'>
               <Link
-                href='#'
+                href='/'
                 className='flex items-center gap-3 rounded-lg px-3 py-2 text-lg font-medium transition-all hover:bg-black hover:text-white'
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -104,7 +104,7 @@ export function DashboardSidebar({
           </nav>
           <div className='border-t-2 border-black p-4'>
             <Link
-              href='#'
+              href='/'
               className='flex items-center gap-3 rounded-lg px-3 py-2 text-lg font-medium transition-all hover:bg-black hover:text-white'
             >
               <LogOut className='h-5 w-5' />

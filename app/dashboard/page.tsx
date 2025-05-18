@@ -133,7 +133,7 @@ export default function Dashboard() {
                 className='ml-auto'
                 onValueChange={setActiveTab}
               >
-                <TabsList className='grid w-full grid-cols-3 border-2 border-black'>
+                <TabsList className='w-full border-2 border-black'>
                   <TabsTrigger value='7days' className='text-lg'>
                     7 days
                   </TabsTrigger>
