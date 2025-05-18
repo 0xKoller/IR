@@ -18,7 +18,7 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
 
   const handleDashboardClick = () => {
     // Navigate to dashboard first
-    router.push("/");
+    router.push("/dashboard");
 
     // Reset states
     setTimeout(() => {
@@ -37,7 +37,7 @@ export function SuccessScreen({ userData }: SuccessScreenProps) {
       });
       setIsInWallet([false, false, false]);
       setCardStackOrder([0, 1, 2]);
-    }, 100);
+    }, 200);
   };
 
   return (

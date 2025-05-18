@@ -1,133 +1,312 @@
-"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight, Leaf } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { CreditCard, Shield, Zap, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
-        <div className='text-center'>
-          <motion.div
-            className='flex justify-center mb-8'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className='h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg'>
-              <CreditCard className='h-10 w-10 text-white' />
-            </div>
-          </motion.div>
-
-          <motion.h1
-            className='text-5xl font-bold text-gray-900 mb-4'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            Your Digital Wallet
-          </motion.h1>
-          <motion.p
-            className='text-xl text-gray-600 mb-8 max-w-2xl mx-auto'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            Secure, simple, and seamless digital asset management for the modern
-            world
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className='flex flex-col sm:flex-row gap-4 justify-center items-center'
-          >
-            <Link href='/signup'>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button className='bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 h-12 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200'>
-                  Get Started
-                  <ChevronRight className='ml-2 h-5 w-5' />
-                </Button>
-              </motion.div>
+    <div className='flex min-h-screen flex-col bg-white'>
+      {/* Floating Header */}
+      <header
+        className='fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl mx-auto rounded-xl border border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-300'
+        id='floating-header'
+      >
+        <div className='flex h-16 items-center justify-between px-6'>
+          <div className='flex items-center gap-2'>
+            <Leaf className='h-7 w-7 text-emerald-500' />
+            <span className='text-2xl font-bold tracking-tight'>ZenWallet</span>
+          </div>
+          <nav className='hidden md:flex items-center gap-8'>
+            <Link
+              href='#features'
+              className='text-base font-medium hover:underline underline-offset-4'
+            >
+              Features
             </Link>
-          </motion.div>
+            <Link
+              href='#cashback'
+              className='text-base font-medium hover:underline underline-offset-4'
+            >
+              Cashback
+            </Link>
+            <Link
+              href='#loyalty'
+              className='text-base font-medium hover:underline underline-offset-4'
+            >
+              Loyalty
+            </Link>
+          </nav>
+          <div className='flex items-center gap-4'>
+            <Link href='/login'>
+              <Button
+                variant='outline'
+                size='lg'
+                className='border-2 border-black font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all'
+              >
+                Log in
+              </Button>
+            </Link>
+            <Link href='/signup'>
+              <Button
+                size='lg'
+                className='bg-black text-white font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all'
+              >
+                Start
+              </Button>
+            </Link>
+          </div>
         </div>
+      </header>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mt-20'>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            whileHover={{ scale: 1.02, y: -5 }}
-            className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200'
-          >
-            <div className='flex items-start'>
-              <div className='h-12 w-12 rounded-xl bg-blue-50 flex items-center justify-center mr-4'>
-                <CreditCard className='h-6 w-6 text-blue-600' />
-              </div>
+      <main className='flex-1 pt-32'>
+        {/* Hero Section */}
+        <section className='relative overflow-hidden py-20 md:py-32'>
+          <div className=' px-4 md:px-6'>
+            <div className='grid gap-12 md:grid-cols-2 md:gap-16 items-center'>
               <div>
-                <h3 className='text-xl font-semibold text-gray-900 mb-2'>
-                  Secure Storage
-                </h3>
-                <p className='text-gray-600'>
-                  Bank-grade security to keep your digital assets safe and
-                  protected
+                <h1 className='text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8'>
+                  DIGITAL
+                  <br />
+                  <span className='text-emerald-500'>ZEN</span>
+                  <br />
+                  WALLET
+                </h1>
+                <p className='text-xl md:text-2xl mb-10 max-w-md'>
+                  Harmony of simplicity and rewards. Cashback and loyalty
+                  without complexity.
+                </p>
+                <div className='flex flex-col sm:flex-row gap-4'>
+                  <Link href='/signup'>
+                    <Button
+                      size='lg'
+                      className='w-full sm:w-auto text-lg bg-black text-white font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all px-8 py-6'
+                    >
+                      START YOUR JOURNEY
+                      <ArrowRight className='ml-2 h-5 w-5' />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className='relative'>
+                <div className='absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1),transparent_70%)]'></div>
+                <div className='relative rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden'>
+                  <Image
+                    src='/placeholder.svg?key=vs0v2'
+                    width={600}
+                    height={600}
+                    alt='ZenWallet Dashboard Preview'
+                    className='w-full rounded-lg'
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id='features' className='py-20 bg-black text-white'>
+          <div className=' px-4 md:px-6'>
+            <h2 className='text-5xl md:text-7xl font-black tracking-tighter mb-16 text-center'>
+              BALANCED
+              <br />
+              FEATURES
+            </h2>
+            <div className='grid gap-12 md:grid-cols-3'>
+              <div className='flex flex-col p-8 border-2 border-white'>
+                <h3 className='text-3xl font-bold mb-4'>UNIVERSAL CASHBACK</h3>
+                <p className='text-xl'>
+                  Earn cashback on every transaction, regardless of where you
+                  shop or what you buy.
+                </p>
+              </div>
+              <div className='flex flex-col p-8 border-2 border-white'>
+                <h3 className='text-3xl font-bold mb-4'>FLEXIBLE LOYALTY</h3>
+                <p className='text-xl'>
+                  Accumulate loyalty points that can be redeemed anywhere, not
+                  tied to specific merchants.
+                </p>
+              </div>
+              <div className='flex flex-col p-8 border-2 border-white'>
+                <h3 className='text-3xl font-bold mb-4'>SECURE & PEACEFUL</h3>
+                <p className='text-xl'>
+                  Advanced security with a zen-like user experience. Protection
+                  without complexity.
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            whileHover={{ scale: 1.02, y: -5 }}
-            className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200'
-          >
-            <div className='flex items-start'>
-              <div className='h-12 w-12 rounded-xl bg-purple-50 flex items-center justify-center mr-4'>
-                <Zap className='h-6 w-6 text-purple-600' />
-              </div>
+        {/* Cashback Section */}
+        <section id='cashback' className='py-20'>
+          <div className=' px-4 md:px-6'>
+            <div className='grid gap-12 md:grid-cols-2 md:items-center'>
               <div>
-                <h3 className='text-xl font-semibold text-gray-900 mb-2'>
-                  Instant Transfers
-                </h3>
-                <p className='text-gray-600'>
-                  Send and receive funds instantly with zero waiting time
+                <h2 className='text-5xl md:text-7xl font-black tracking-tighter mb-8'>
+                  CASHBACK
+                  <br />
+                  WITHOUT
+                  <br />
+                  BOUNDARIES
+                </h2>
+                <p className='text-xl mb-8'>
+                  Unlike traditional wallets that limit cashback to specific
+                  stores or categories, ZenWallet rewards you everywhere.
                 </p>
+                <ul className='space-y-4 text-xl'>
+                  <li className='flex items-start'>
+                    <div className='mr-3 flex h-8 w-8 items-center justify-center bg-black text-white font-bold'>
+                      +
+                    </div>
+                    <span>2% cashback on all transactions, no exceptions</span>
+                  </li>
+                  <li className='flex items-start'>
+                    <div className='mr-3 flex h-8 w-8 items-center justify-center bg-black text-white font-bold'>
+                      +
+                    </div>
+                    <span>Automatic deposits to your wallet balance</span>
+                  </li>
+                  <li className='flex items-start'>
+                    <div className='mr-3 flex h-8 w-8 items-center justify-center bg-black text-white font-bold'>
+                      +
+                    </div>
+                    <span>No minimum spending requirements</span>
+                  </li>
+                </ul>
+              </div>
+              <div className='relative'>
+                <div className='rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
+                  <Image
+                    src='/placeholder.svg?key=cq96q'
+                    width={600}
+                    height={600}
+                    alt='Cashback Illustration'
+                    className='rounded-lg'
+                  />
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            whileHover={{ scale: 1.02, y: -5 }}
-            className='bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200'
-          >
-            <div className='flex items-start'>
-              <div className='h-12 w-12 rounded-xl bg-green-50 flex items-center justify-center mr-4'>
-                <Shield className='h-6 w-6 text-green-600' />
+        {/* Loyalty Section */}
+        <section id='loyalty' className='py-20 bg-emerald-500 text-black'>
+          <div className='px-4 md:px-6'>
+            <div className='grid gap-12 md:grid-cols-2 md:items-center'>
+              <div className='order-2 md:order-1 relative'>
+                <div className='rounded-xl border-4 border-black bg-white p-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
+                  <Image
+                    src='/placeholder.svg?key=jkk1e'
+                    width={600}
+                    height={600}
+                    alt='Loyalty Points Illustration'
+                    className='rounded-lg'
+                  />
+                </div>
               </div>
-              <div>
-                <h3 className='text-xl font-semibold text-gray-900 mb-2'>
-                  Full Protection
-                </h3>
-                <p className='text-gray-600'>
-                  Advanced security features and 24/7 monitoring
+              <div className='order-1 md:order-2'>
+                <h2 className='text-5xl md:text-7xl font-black tracking-tighter mb-8'>
+                  LOYALTY
+                  <br />
+                  REIMAGINED
+                </h2>
+                <p className='text-xl mb-8'>
+                  Our loyalty system breaks free from the traditional model,
+                  giving you complete freedom to earn and redeem.
                 </p>
+                <div className='space-y-6'>
+                  <div className='border-2 border-black p-6 bg-white'>
+                    <h3 className='text-2xl font-bold mb-2'>
+                      UNIVERSAL REDEMPTION
+                    </h3>
+                    <p className='text-xl'>
+                      Redeem points for purchases anywhere, not just at partner
+                      stores
+                    </p>
+                  </div>
+                  <div className='border-2 border-black p-6 bg-white'>
+                    <h3 className='text-2xl font-bold mb-2'>
+                      POINTS AS CURRENCY
+                    </h3>
+                    <p className='text-xl'>
+                      Use points like cash or convert them to your wallet
+                      balance
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className='py-20'>
+          <div className=' px-4 md:px-6'>
+            <div className='border-4 border-black p-12 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'>
+              <div className='mx-auto max-w-3xl text-center'>
+                <h2 className='text-5xl md:text-7xl font-black tracking-tighter mb-8'>
+                  READY FOR
+                  <br />
+                  FINANCIAL ZEN?
+                </h2>
+                <div className='mt-8 flex flex-col sm:flex-row justify-center gap-6'>
+                  <Link href='/signup'>
+                    <Button
+                      size='lg'
+                      className='w-full sm:w-auto text-xl bg-black text-white font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none transition-all px-8 py-6'
+                    >
+                      CREATE YOUR WALLET
+                      <ArrowRight className='ml-2 h-5 w-5' />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className='border-t-4 border-black bg-white'>
+        <div className=' py-12 px-4 md:px-6'>
+          <div className='flex flex-col md:flex-row justify-between items-center'>
+            <div className='flex items-center gap-2 mb-6 md:mb-0'>
+              <Leaf className='h-8 w-8 text-emerald-500' />
+              <span className='text-2xl font-bold tracking-tight'>
+                ZenWallet
+              </span>
+            </div>
+            <p className='text-lg'>
+              &copy; {new Date().getFullYear()} ZenWallet. All rights reserved.
+            </p>
+          </div>
         </div>
-      </div>
+      </footer>
+
+      {/* Script for header behavior */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+          document.addEventListener('DOMContentLoaded', function() {
+            const header = document.getElementById('floating-header');
+            let lastScrollTop = 0;
+            
+            window.addEventListener('scroll', function() {
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              
+              if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                header.style.transform = 'translateY(-100%)';
+              } else {
+                // Scrolling up
+                header.style.transform = 'translateY(0)';
+              }
+              
+              lastScrollTop = scrollTop;
+            });
+          });
+        `,
+        }}
+      />
     </div>
   );
 }
