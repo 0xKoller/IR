@@ -1,7 +1,15 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 // Generate sample data based on the selected time range
 const generateData = (timeRange: string) => {
@@ -15,46 +23,52 @@ const generateData = (timeRange: string) => {
     { name: "Uber", amount: 132.5, previousAmount: 148.6 },
     { name: "Apple", amount: 299.99, previousAmount: 225.0 },
     { name: "Gym", amount: 135.0, previousAmount: 135.0 },
-  ].sort((a, b) => b.amount - a.amount)
-}
+  ].sort((a, b) => b.amount - a.amount);
+};
 
 interface TopMerchantsChartProps {
-  timeRange: string
+  timeRange: string;
 }
 
 export function TopMerchantsChart({ timeRange }: TopMerchantsChartProps) {
-  const [data, setData] = useState([])
-  const [isAnimating, setIsAnimating] = useState(true)
+  const [data, setData] = useState([]);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
-    setIsAnimating(true)
-    const newData = generateData(timeRange)
-    setData(newData)
+    setIsAnimating(true);
+    const newData = generateData(timeRange);
+    setData(newData as any);
 
     const timer = setTimeout(() => {
-      setIsAnimating(false)
-    }, 500)
+      setIsAnimating(false);
+    }, 500);
 
-    return () => clearTimeout(timer)
-  }, [timeRange])
+    return () => clearTimeout(timer);
+  }, [timeRange]);
 
   return (
-    <div className={`h-full w-full transition-opacity duration-500 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#000000" />
+    <div
+      className={`h-full w-full transition-opacity duration-500 ${isAnimating ? "opacity-0" : "opacity-100"}`}
+    >
+      <ResponsiveContainer width='100%' height='100%'>
+        <BarChart
+          data={data}
+          layout='vertical'
+          margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
+        >
+          <CartesianGrid strokeDasharray='3 3' stroke='#000000' />
           <XAxis
-            type="number"
-            stroke="#000000"
+            type='number'
+            stroke='#000000'
             fontSize={12}
             tickLine={{ stroke: "#000000" }}
             axisLine={{ stroke: "#000000", strokeWidth: 2 }}
             tickFormatter={(value) => `$${value}`}
           />
           <YAxis
-            type="category"
-            dataKey="name"
-            stroke="#000000"
+            type='category'
+            dataKey='name'
+            stroke='#000000'
             fontSize={12}
             tickLine={{ stroke: "#000000" }}
             axisLine={{ stroke: "#000000", strokeWidth: 2 }}
@@ -71,19 +85,19 @@ export function TopMerchantsChart({ timeRange }: TopMerchantsChartProps) {
             animationDuration={300}
           />
           <Bar
-            dataKey="amount"
-            name="Current Period"
-            fill="#10b981"
-            stroke="#000000"
+            dataKey='amount'
+            name='Current Period'
+            fill='#10b981'
+            stroke='#000000'
             strokeWidth={1}
             radius={0}
             animationDuration={1500}
           />
           <Bar
-            dataKey="previousAmount"
-            name="Previous Period"
-            fill="#d1d5db"
-            stroke="#000000"
+            dataKey='previousAmount'
+            name='Previous Period'
+            fill='#d1d5db'
+            stroke='#000000'
             strokeWidth={1}
             radius={0}
             animationDuration={1500}
@@ -91,5 +105,5 @@ export function TopMerchantsChart({ timeRange }: TopMerchantsChartProps) {
         </BarChart>
       </ResponsiveContainer>
     </div>
-  )
+  );
 }
